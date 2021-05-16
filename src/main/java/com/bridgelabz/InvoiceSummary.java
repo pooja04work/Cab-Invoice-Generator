@@ -18,4 +18,5 @@ public class InvoiceSummary {
         InvoiceSummary that = (InvoiceSummary) o;
         return numOfRides == that.numOfRides && Double.compare(that.totalFare, totalFare) == 0 && Double.compare(that.averageFare, averageFare) == 0;
     }
+
 }
