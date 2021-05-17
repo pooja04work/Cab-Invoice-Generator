@@ -1,12 +1,9 @@
 package com.bridgelabz;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class CabInvoiceGenerator {
-    private static final double COST_PER_KILOMETER = 10;
-    private static final int COST_PER_MIN = 1;
-    private double MINIMUM_FARE = 5;
+    private static final int COST_PER_TIME = 1;
+    private static final double MINIMUM_COST_PER_KILOMETER = 10;
+    private static final double MINIMUM_FARE = 5;
     private final RideRepository rideRepository;
 
     public CabInvoiceGenerator(){
@@ -14,16 +11,18 @@ public class CabInvoiceGenerator {
     }
 
     public double calculateFare(double distance, int time) {
-        double totalFare = distance * COST_PER_KILOMETER + time * COST_PER_MIN;
+        double totalFare = (distance * MINIMUM_COST_PER_KILOMETER + time * COST_PER_TIME);
         return Math.max(totalFare, MINIMUM_FARE);
     }
+
     public InvoiceSummary calculateFare(Ride[] rides) {
         double totalFare = 0;
         for (Ride ride : rides) {
-            totalFare += this.calculateFare(ride.distance, ride.time);
+            totalFare += ride.rideType.calculateCostOfCabRide(ride);
         }
         return new InvoiceSummary(rides.length, totalFare);
     }
+
     public InvoiceSummary getInvoiceSummary(String userId) {
         return this.calculateFare(rideRepository.getRides(userId));
     }
@@ -31,6 +30,4 @@ public class CabInvoiceGenerator {
     public void addRides(String userId, Ride[] rides) {
         rideRepository.addRides(userId, rides);
     }
-
-
 }
